@@ -12,17 +12,17 @@ public class Playfield : MonoBehaviour {
     public int maxRow = 22;
     public Transform cellPrefab;
 
-    public int[, ] fields;
+    public int[, ] cells;
 
     public void SetField () {
-        fields = new int[maxRow, column];
+        cells = new int[maxRow, column];
     }
 
     // public int[,] fields;
     public void InitField () {
         for (int y = 0; y < maxRow; y++) {
             for (int x = 0; x < column; x++) {
-                fields[x, y] = 0;
+                cells[x, y] = 0;
             }
         }
     }
@@ -42,7 +42,7 @@ public class Playfield : MonoBehaviour {
         for (int i = 0; i < maxRow; i++) {
             int s = 0;
             for (int j = 0; j < column; j++) {
-                s += fields[i, j];
+                s += cells[i, j];
             }
             if (s >= column) { // 这行满了
                 r.Add (i);
