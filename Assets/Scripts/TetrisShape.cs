@@ -53,7 +53,6 @@ public class TetrisShape : MonoBehaviour {
 		}
 	}
 
-
 	public void Rotation () {
 		for (int i = 0; i < blocks.Length; i++) {
 			blocks[i].pos = blocks[i].pos.RotateClockWise (pivot.localPosition);
