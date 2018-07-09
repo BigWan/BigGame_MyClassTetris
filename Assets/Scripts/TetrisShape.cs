@@ -2,76 +2,114 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 形状
-/// </summary>
+// public enum TShape { I, O, Z, S, J, L, T }
+
 public class TetrisShape : MonoBehaviour {
 
-	public Transform[] cubes; 		// 块
-	public Vector3Int[] positions;	// 位置
-	public Transform pivot; 		// 旋转中心
-	public Playfield field;			// 格子
+	// I, O, Z, S, J, L, T
+	private float[, ] posdata = new float[, ] {
+		// xy,xy,xy,xy
+		{ 3, 21, 4, 21, 5, 21, 6, 21 },
+		{ 4, 21, 5, 21, 4, 20, 5, 20 },
+		{ 3, 21, 4, 21, 4, 20, 5, 20 },
+		{ 4, 21, 5, 21, 3, 20, 4, 20 },
+		{ 3, 21, 4, 21, 5, 21, 5, 20 },
+		{ 3, 21, 4, 21, 5, 21, 3, 20 },
+		{ 3, 21, 4, 21, 5, 21, 4, 20 }
+	};
 
-	/// <summary>
-	/// 顺时针旋转每个块
-	/// </summary>
-	public void Rotation () {
-		// rotate cubes
-		foreach (var item in cubes) {
-			item.RotateAround (pivot.localPosition, Vector3.back, 90f);
-		}
-		// get v3 pos
-		for (int i = 0; i < positions.Length; i++) {
-			positions[i] = Vector3Int.RoundToInt( cubes[i].localPosition);
+	private float [,] pivotdata = new float[,]{
+		{4.5f,20.5f},
+		{4.5f,20.5f},
+		{4f,21f},
+		{4f,21f},
+		{4f,21f},
+		{4f,21f},
+		{4f,21f}
+	};
 
+	public Color[] colors= new Color[]{
+		Color.red,
+		Color.green,
+		Color.cyan,
+		Color.black,
+		Color.yellow,
+		Color.gray,
+		Color.white
+	};
+
+	public float speed;
+	private float currentTime;
+	public int currentType = 0;
+	public Transform pivot; // 旋转中心
+	public TetrisBlock[] blocks; // 块的引用
+
+	public void CreateTetris(int index){
+		// blocks = new TetrisBlock[4];
+		pivot.localPosition = new Vector3 (pivotdata[index,0], pivotdata[index,1]);
+		for (int i = 0; i < blocks.Length; i++) {
+			blocks[i].pos.x = posdata[index,i * 2];
+			blocks[i].pos.y = posdata[index,i * 2 + 1];
 		}
 	}
 
-	void MoveRight () {
-		Move (Vector3.right);
+
+	public void Rotation () {
+		for (int i = 0; i < blocks.Length; i++) {
+			blocks[i].pos = blocks[i].pos.RotateClockWise (pivot.localPosition);
+		}
 	}
 
 	void MoveLeft () {
-		Move (Vector3.left);
+		foreach (var item in blocks) {
+			item.pos = item.pos + Vector2.left;
+		}
+		pivot.localPosition = pivot.localPosition + Vector3.left;
 	}
 
-	/// <summary>
-	/// 朝一个方向移动
-	/// </summary>
-	/// <param name="dir">移动方向</param>
-	void Move (Vector3 dir) {
-		foreach (var item in cubes) {
-			item.localPosition = item.localPosition + dir;
+	void MoveRight () {
+		foreach (var item in blocks) {
+			item.pos = item.pos + Vector2.right;
 		}
-		pivot.localPosition = pivot.localPosition + dir;
+		pivot.localPosition = pivot.localPosition + Vector3.right;
 	}
 
 	void MoveDown () {
-		Move (Vector3.down);
+		foreach (var item in blocks) {
+			item.pos = item.pos + Vector2.down;
+		}
+		pivot.localPosition = pivot.localPosition + Vector3.down;
 	}
 
-	// Update is called once per frame
 	void Update () {
+		currentTime += Time.deltaTime;
+		if (currentTime < speed){
+
+		} else{
+			currentTime -= speed;
+			MoveDown();
+		}
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			Rotation ();
 		}
 		if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			MoveDown ();
+			CreateTetris (currentType);
 		}
-		if(Input.GetKeyDown(KeyCode.C)){
-			Stop();
+		if (Input.GetKeyDown (KeyCode.C)) {
+			Lock ();
 		}
 	}
 
-	public bool TryMove () {
-		return false;
-	}
-
-	// 停止
-	public void Stop(){
-		foreach (var item in cubes) {
-			item.SetParent(field.transform,false);
+	// 到位
+	public void Lock () {
+		for (int i = 0; i < blocks.Length; i++) {
+			blocks[i].isLock = true;
 		}
+		SpawnNewTetris();
+	}
+
+	public void SpawnNewTetris(){
 
 	}
+
 }
