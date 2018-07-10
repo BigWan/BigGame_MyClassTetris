@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// public enum TShape { I, O, Z, S, J, L, T }
 
-public class TetrisShape : MonoBehaviour {
 
-	// I, O, Z, S, J, L, T
-	private int[][] posdata ={
+
+public class TetrisManager : MonoBehaviour {
+
+
+
+	private int[][] posdata = {
 		new int[]{ 3, 21, 4, 21, 5, 21, 6, 21 }, // I
 		new int[]{ 4, 21, 5, 21, 4, 20, 5, 20 }, // O
 		new int[]{ 3, 21, 4, 21, 4, 20, 5, 20 }, // Z
@@ -29,17 +31,17 @@ public class TetrisShape : MonoBehaviour {
 
 	public Color[] colors= new Color[]{
 		Color.cyan,
-		Color.yellow, // 黄色O
-		Color.red, // 红色Z
-		Color.green, // 绿色S
-		Color.blue, // 蓝色J
+		Color.yellow,   // 黄色O
+		Color.red,      // 红色Z
+		Color.green,    // 绿色S
+		Color.blue,     // 蓝色J
 		new Color(1f,165f/255f,0),
         new Color(0.5f,0,0.5f)
     };
 
 	public float speed = 0.25f;
 	private float currentTime;
-	public int currentType = 0;
+	private int currentType = 0;
 
 
     public Transform blockContainer ;
@@ -142,7 +144,7 @@ public class TetrisShape : MonoBehaviour {
 
 	public void SpawnNewTetris(){
 		Debug.Log("SpawnNewTetris");
-        currentType = Random.Range(1, 7); 
+        currentType = Random.Range(1, 7);
 
         CreateTetris(currentType);
 	}
