@@ -4,20 +4,34 @@ using UnityEngine;
 
 public class TetrisBlock : MonoBehaviour {
 
-	public Vector2 pos;
+    public Vector2Int pos;
+
 	public bool isLock = false; // move or lock
+    public Color color;
 
 	private void Update () {
-		transform.localPosition = new Vector3 (pos.x, pos.y, 0);
+	    transform.localPosition = new Vector3 (pos.x, pos.y, 0);
 	}
 
-	public Vector2Int GridPos () {
-		return new Vector2Int (Mathf.RoundToInt (pos.x), Mathf.RoundToInt (pos.y));
-	}
+    public int X {
+        get { return (pos.x); }
+    }
+    public int Y {
+        get { return (pos.y); }
+    }
 
-	// 爆炸
-	public void explosion(){
+    public Vector2Int Coord {
+        get {
+            return new Vector2Int(X, Y);
+        }
+    }
+
+    public void DropDown() {
+        pos = pos + Vector2Int.down;
+    }
+    // 爆炸
+    public void Explosion(){
 		// 播放效果
-		GameObject.Destroy(gameObject);
+		GameObject.DestroyImmediate(gameObject);
 	}
 }
