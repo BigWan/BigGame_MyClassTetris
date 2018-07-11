@@ -22,14 +22,20 @@ public class Playfield : MonoBehaviour {
     // cells 0 表示没有块,
     // 其他int值表示颜色索引
 
-    private int[,] cells;
+    public  int[,] cells;
 
     public List<TetrisBlock> LockedBlocks;
+
+    public Vector2Int SpwanOrigin;    // 生成的方块的原点
+    public void CalcOrigin() {
+        SpwanOrigin = new Vector2Int(column / 2 - 1, deadRow - 1);
+    }
 
     private void Awake() {
         LockedBlocks = new List<TetrisBlock>();
         InitCell();
         RenderGrid();
+        CalcOrigin();
     }
 
     public void SetCell(TetrisBlock tb) {
@@ -81,7 +87,7 @@ public class Playfield : MonoBehaviour {
                 s *= cells[x, y];
             }
 
-            if (s > 0) { 
+            if (s > 0) {
                 rows.Add(y);
             }
         }

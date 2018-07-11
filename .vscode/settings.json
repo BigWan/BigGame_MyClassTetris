@@ -51,6 +51,12 @@
         "Obj/":true,
         "ProjectSettings/":true,
         "temp/":true,
-        "Temp/":true
+        "Temp/":true,
+        ".vs/":true,
+        ".vscode/":true,
+        "Packages/":true,
+        "**/*.csproj":true,
+        "**/*.sln":true,
+
     }
 }
