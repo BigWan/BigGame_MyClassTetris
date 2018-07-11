@@ -6,7 +6,7 @@ public class TetrisBlock : MonoBehaviour {
 
     public Vector2Int pos;
 
-	public bool isLock = false; // move or lock
+	//public bool isLock = false; // move or lock
     public Color color;
 
 	private void Update () {

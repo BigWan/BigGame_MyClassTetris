@@ -129,7 +129,7 @@ public class Playfield : MonoBehaviour {
         return true;
     }
 
-    // 碰撞检测(pos目标位置不是0)
+    // 碰撞检测
     private bool NoBlockCheck(Vector2Int pos){
         return (cells[pos.x,pos.y] == 0);
     }
@@ -141,7 +141,7 @@ public class Playfield : MonoBehaviour {
 
     // 检查坐标是否合法
     public bool CanAction(Vector2Int[] pos){
-        Debug.Assert(pos.Length == 4, "数据长度不够");
+        //Debug.Assert(pos.Length == 4, "数据长度不够");
         bool r = true;
         for (int i = 0; i < pos.Length; i++) {
             r = r && CanAction(pos[i]);
