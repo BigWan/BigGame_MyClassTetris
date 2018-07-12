@@ -964,6 +964,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.25
+  lockDelay: 5
+  clearScores: 01000000030000000500000008000000
   blockContainer: {fileID: 499451781}
   blockPrefab: {fileID: 114141817516679230, guid: 3ee76916d7d8ba342b8649415df40e12,
     type: 2}
