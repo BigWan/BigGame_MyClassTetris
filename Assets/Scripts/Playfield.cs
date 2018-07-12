@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
+public delegate void ClearUpHandler(int count);
 
 /// <summary>
 /// 数组表示俄罗斯方块的每个格子信息
@@ -9,40 +11,34 @@ using UnityEngine;
 /// </summary>
 public class Playfield : MonoBehaviour {
 
-    public int column = 10;
-    public int maxRow = 30;
+    // Setting
+    public int column  = 10;
+    public int maxRow  = 30;
     public int deadRow = 22;
+
+    // 静态引用
     public Transform cellPrefab;
-
-
-    public Transform[,] grids;
-    //public Transform[,] debugrids;
-    //public TetrisRow[] cells;
-
-    // cells 0 表示没有块,
-    // 其他int值表示颜色索引
-
-    public  int[,] cells;
-
+    // 动态引用
     public List<TetrisBlock> LockedBlocks;
-
     public Vector2Int SpwanOrigin;    // 生成的方块的原点
-    public void CalcOrigin() {
+    private Transform[,] grids;
+
+    // 棋盘数据
+    public int[,] cells;
+
+    // 事件
+    public event ClearUpHandler ClearUp;  // 消行结束
+
+    private void CalcOrigin() {
         SpwanOrigin = new Vector2Int(column / 2 - 1, deadRow - 1);
     }
 
     private void Awake() {
         LockedBlocks = new List<TetrisBlock>();
-        InitCell();
+        cells = new int[column, maxRow];
+        grids = new Transform[column, maxRow];
         RenderGrid();
         CalcOrigin();
-    }
-
-    public void SetCell(TetrisBlock tb) {
-        // set cells
-        //cells[x, y] = index;
-        LockedBlocks.Add(tb);
-        // set blocks
     }
 
     public void RefreshCells() {
@@ -52,13 +48,10 @@ public class Playfield : MonoBehaviour {
         }
     }
 
-    private void InitCell () {
-        cells = new int[column, maxRow];
-        grids = new Transform[column, maxRow];
-        //debugrids = new Transform[column, maxRow];
-    }
-
-    public void RenderGrid () {
+    /// <summary>
+    /// 生成棋盘格
+    /// </summary>
+    private void RenderGrid () {
         for (int y = 0; y < deadRow; y++) {
             for (int x = 0; x < column; x++) {
                 RenderCell (x, y);
@@ -70,11 +63,6 @@ public class Playfield : MonoBehaviour {
         Transform cell = Instantiate(cellPrefab) as Transform;
         cell.SetParent(transform);
         cell.localPosition = new Vector3(x, y, 0);
-        //Transform debugcell = Instantiate(cellPrefab) as Transform;
-
-        //debugcell.localPosition = new Vector3(x, y, 0) + Vector3.right * 10;
-
-        //debugrids[x, y] = debugcell;
     }
 
     private int[] CheckRows () {
@@ -94,6 +82,7 @@ public class Playfield : MonoBehaviour {
         return rows.ToArray();
     }
 
+
     private void ClearRows(int[] rows) {
         if(rows.Length==0) return;
         for (int r = 0; r < rows.Length; r++) {
@@ -105,47 +94,72 @@ public class Playfield : MonoBehaviour {
                 }
             }
         }
+        ClearUp(rows.Length);
         RefreshCells();
         //Debug.Break();
     }
 
+    /// <summary>
+    /// 检测是否要消行
+    /// </summary>
     public void ClearFullRow() {
         RefreshCells();
         int[] rows = CheckRows();
-        ClearRows(rows);
-        DownOthers(rows);
+        if(rows.Length > 0) {
+            ClearRows(rows);
+            DownOthers(rows);
+        }
     }
 
+    /// <summary>
+    /// Clear Line 后的其他行的下落
+    /// </summary>
+    /// <param name="rows"></param>
     public void DownOthers(int[] rows) {
         for (int r = rows.Length-1; r >=0 ; r--) {
             foreach (var block in LockedBlocks) {
                 if (block.Y > rows[r]) {
                     block.DropDown();
-                    //cells[block.X, block.Y-1] = cells[block.X, block.Y];
                 }
             }
         }
         RefreshCells();
     }
 
-    // 边界检测
-    private bool InBoundCheck(Vector2Int pos){
+    /// <summary>
+    /// 检测坐标是否在边界内部
+    /// </summary>
+    /// <param name="pos">坐标</param>
+    /// <returns></returns>
+    private bool InBound(Vector2Int pos){
         if(pos.x<0 || pos.x>=column) return false;
         if(pos.y<0 || pos.y>=deadRow) return false;
         return true;
     }
 
-    // 碰撞检测
-    private bool NoBlockCheck(Vector2Int pos){
+    /// <summary>
+    /// 检测目标点是否为空
+    /// </summary>
+    /// <param name="pos">坐标</param>
+    /// <returns></returns>
+    private bool IsEmpty(Vector2Int pos){
         return (cells[pos.x,pos.y] == 0);
     }
 
+    /// <summary>
+    /// 该坐标是否能移动过去
+    /// </summary>
+    /// <param name="pos">坐标</param>
+    /// <returns></returns>
     public bool CanAction(Vector2Int pos){
-        // 边界
-        return (InBoundCheck(pos) && NoBlockCheck(pos));
+        return (InBound(pos) && IsEmpty(pos));
     }
 
-    // 检查坐标是否合法
+    /// <summary>
+    /// 批量检测坐标合法性
+    /// </summary>
+    /// <param name="pos">坐标数组</param>
+    /// <returns></returns>
     public bool CanAction(Vector2Int[] pos){
         //Debug.Assert(pos.Length == 4, "数据长度不够");
         bool r = true;
@@ -154,21 +168,5 @@ public class Playfield : MonoBehaviour {
         }
         return r;
     }
-    //public Color[] colors = new Color[]{
-    //    Color.gray,
-    //    Color.green,
-    //    Color.cyan,
-    //    Color.black,
-    //    Color.yellow,
-    //    Color.red,
-    //    Color.white
-    //};
 
-    //private void Update() {
-    //    for (int y = 0; y < deadRow; y++) {
-    //        for (int x = 0; x < column; x++) {
-    //            debugrids[x, y].GetComponent<MeshRenderer>().material.color = colors[cells[x, y]];
-    //        }
-    //    }
-    //}
 }

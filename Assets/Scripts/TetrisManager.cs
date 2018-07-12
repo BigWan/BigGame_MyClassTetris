@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 // TODO: 数据配置化(数组里配也算ok)
 // 快速下落功能(ok)
@@ -20,6 +21,12 @@ public enum  GameStat {
 	End					// 结束
 }
 
+public enum DropStat{
+	Spawning,
+	Dropping,
+	Delaying,
+}
+
 /// <summary>
 /// 方块管理器,负责方块旋转,下落,消行等
 /// </summary>
@@ -27,8 +34,8 @@ public class TetrisManager : MonoBehaviour {
 
 	// 游戏设置
     public float   speed = 0.25f;      // 速度
-	private float  lockDelay = 0.5f;   // 下落延迟
-
+	public float  lockDelay = 0.5f;   // 下落延迟
+	public int[]  clearScores = new int[]{1,3,5,8};
 	// 资源引用
     public Transform blockContainer; // 方块父物体
     public TetrisBlock blockPrefab;  // 方块预制体
@@ -42,8 +49,17 @@ public class TetrisManager : MonoBehaviour {
 	private int nextShapeID = 0;		// 下一次的块ID，在UI框显示
     private TetrisBlock[] blocks;     	// 块的引用
 	private bool isDropOver = true;    	// 是否一次掉落完毕，可以继续生成下一个块
+	private DropStat ds;
+	private bool GameOverStat = false;
+	// 游戏数据
+	private int score;
 
-    // 数据配置
+	// 事件,驱动数据改变的事件
+	public event EventHandler ScoreChange;   // 得分事件
+    public event EventHandler GameOver;      // 游戏结束事件
+
+
+	// 数据配置
     private int[][] posdata = {
 		new int[]{ -1, 0, 0, 0, 1, 0, 2, 0 },   // I
 		new int[]{ 0, 0, 1, 0, 0, -1, 1, -1 },  // O
@@ -74,23 +90,27 @@ public class TetrisManager : MonoBehaviour {
         new Color(0.5f,0,0.5f)
 	};
 
-
 	// 踢墙算法检测的5个点
-	Vector2Int[] checkpoint = new Vector2Int[]{
+	Vector2Int[] TickOffsetPoint = new Vector2Int[]{
 		Vector2Int.zero,
 		Vector2Int.left,
 		Vector2Int.right,
-		Vector2Int.up,Vector2Int.down
+		Vector2Int.up,
+		Vector2Int.down
 	};
+
+	private void Awake() {
+		field.ClearUp += OnClearUp;
+	}
 
 	// 初始化游戏
 	void InitGame(){
 		stat = GameStat.Ready;
-		
 	}
 
 	// 生成方块
 	public void SpawnTetris(int index){
+		if(ds!=DropStat.Spawning) return;
 		Vector2Int origin = field.SpwanOrigin;
 		int rnk = 4;					// TODO 支持其他类型的block
 		blocks = new TetrisBlock[rnk];
@@ -98,7 +118,8 @@ public class TetrisManager : MonoBehaviour {
 		for (int i = 0; i < blocks.Length; i++) {
 			blocks[i] = Instantiate<TetrisBlock>(blockPrefab) as TetrisBlock;
             blocks[i].color = colors[index];
-            blocks[i].pos = new Vector2Int(posdata[index][i * 2], posdata[index][i * 2 + 1])+origin;
+            blocks[i].Coord = new Vector2Int(posdata[index][i * 2], posdata[index][i * 2 + 1])+origin;
+			if(!field.CanAction(blocks[i].Coord)){GameOverStat = true;}
 		}
 	}
 
@@ -106,13 +127,14 @@ public class TetrisManager : MonoBehaviour {
 	/// 方块旋转,踢墙和踢地板
 	/// </summary>
 	public void Rotation () {
+		if(ds!=DropStat.Dropping) return;
 		Vector2Int[] newpos = new Vector2Int[4];
 		// 计算原地旋转后的坐标
 		for (int i = 0; i < blocks.Length; i++) {
-			newpos[i] = Vector2Util.RotateClockWise(blocks[i].pos, pivot.localPosition);
+			newpos[i] = Vector2Util.RotateClockWise(blocks[i].Coord, pivot.localPosition);
 		}
-
-		for (int j = 0; j < checkpoint.Length; j++) {
+		//踢墙检测
+		for (int j = 0; j < TickOffsetPoint.Length; j++) {
 			Vector2Int[] kickpos = new Vector2Int[4];
 			for (int i = 0; i < blocks.Length; i++) {
 				kickpos[i] = newpos[i]+Vector2Int.up;
@@ -121,23 +143,28 @@ public class TetrisManager : MonoBehaviour {
 			if(field.CanAction(newpos)) {				// 能转
 				nextDroptime = 0f;
 				for (int i = 0; i < blocks.Length; i++) {
-					blocks[i].pos = newpos[i];
+					blocks[i].Coord = newpos[i];
 				}
 				return;
 			}
 		}
 	}
 
+	/// <summary>
+	/// 移动功能
+	/// </summary>
+	/// <param name="dir">左右方向</param>
 	void Move(Vector2Int dir){
+		if(ds!= DropStat.Dropping) return;
 		Vector2Int[] newpos = new Vector2Int[4];
-		// 能不能移
+
 		for (int i = 0; i < blocks.Length; i++) {
 			newpos[i] = blocks[i].Coord + dir;
 		}
 
         if (field.CanAction(newpos)) {
             for (int i = 0; i < blocks.Length; i++) {
-                blocks[i].pos = newpos[i];
+                blocks[i].Coord = newpos[i];
             }
             pivot.localPosition = pivot.localPosition + new Vector3(dir.x,dir.y);
 			nextDroptime = 0f;
@@ -145,26 +172,24 @@ public class TetrisManager : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// 正常下落功能，到达终点后延迟0.5s
+	/// 正常下落功能
 	/// </summary>
     void DropDown() {
-		if (nextDroptime >= speed && isDropOver){
+		if (nextDroptime >= speed && ds == DropStat.Dropping){
 			nextDroptime -= speed;
 			Vector2Int[] newpos = new Vector2Int[4];
 			// 能不能移
 			for (int i = 0; i < blocks.Length; i++) {
-				newpos[i] = blocks[i].pos + Vector2Int.down;
+				newpos[i] = blocks[i].Coord + Vector2Int.down;
 			}
 
 			if (field.CanAction(newpos)) {
-				// 移
 				for (int i = 0; i < blocks.Length; i++) {
-					blocks[i].pos = newpos[i];
+					blocks[i].Coord = newpos[i];
 				}
 				pivot.localPosition = pivot.localPosition + Vector3.down;
-
 			} else {
-				StartCoroutine(LockShape());
+				LockShape();
 				return;
 			}
 		}
@@ -174,16 +199,18 @@ public class TetrisManager : MonoBehaviour {
 	/// 快速下落功能，快捷键向下箭头
 	/// </summary>
 	void QuickDropDown(){
+		if(ds != DropStat.Dropping) return;
 		int dis = ClacGhostDistance();
 		for (int i = 0; i < 4; i++) {
-			blocks[i].pos = blocks[i].pos + Vector2Int.down*dis;
+			blocks[i].Coord = blocks[i].Coord + Vector2Int.down*dis;
 		}
 		pivot.localPosition = pivot.localPosition + Vector3.down*dis;
-		StartCoroutine(LockShape());
+		ds = DropStat.Delaying;
+		LockShape();
 	}
 
 	/// <summary>
-	/// 计算幽灵的位置
+	/// 计算幽灵的距离
 	/// </summary>
 	int ClacGhostDistance(){
 		// 计算每个方块最大还能移动的距离
@@ -197,55 +224,66 @@ public class TetrisManager : MonoBehaviour {
 				}
 			}
 		}
-		return  maxdis.Min();						// 高度差的最小值就是方块能移动的最大距离
+		return  maxdis.Min();
 	}
 
+	// 游戏开始
 	private void Start() {
 		SpawnNewTetris();
 	}
 
 	void Update () {
-		nextDroptime += Time.deltaTime;
-		if (Input.GetKeyDown (KeyCode.UpArrow))     { Rotation ();		        }
-		if (Input.GetKeyDown (KeyCode.LeftArrow))   {
-			Move (Vector2Int.left);
+		if(!GameOverStat){
+			nextDroptime += Time.deltaTime;
+
+			if (Input.GetKeyDown (KeyCode.UpArrow)||Input.GetKeyDown (KeyCode.Space)) {
+				Rotation ();
+			}
+
+			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+				Move (Vector2Int.left);
+			}
+
+			if (Input.GetKeyDown (KeyCode.RightArrow)) {
+				Move (Vector2Int.right);
+			}
+
+			if (Input.GetKeyDown (KeyCode.DownArrow)){
+				QuickDropDown();
+			}
+
+			DropDown();
 		}
-		if (Input.GetKeyDown (KeyCode.RightArrow))  {
-			Move (Vector2Int.right);
-		}
-		if (Input.GetKeyDown (KeyCode.Space))       { Rotation ();		        }
-		if (Input.GetKeyDown (KeyCode.F1))   { 	SpawnNewTetris();	}
-		if (Input.GetKeyDown (KeyCode.DownArrow))           { QuickDropDown();	}
-		DropDown();
 	}
 
 	// 停止
-	public IEnumerator LockShape () {
-        Debug.Log("Lock a Shape");
-		isDropOver = false;
+	public void LockShape () {
+		ds = DropStat.Delaying;
 		nextDroptime = 0;
 		for (int i = 0; i < blocks.Length; i++) {
-			//blocks[i].isLock = true;
             blocks[i].transform.SetParent(blockContainer);
-            //field.cells[blocks[i].X, blocks[i].Y] = currentType+1;
-            field.SetCell(blocks[i]);
-            blocks[i] = null; 			// TODO:如果这里Move()的话,会报空引用
+            field.LockedBlocks.Add(blocks[i]);
+            blocks[i] = null;
 		}
         field.RefreshCells();
-        field.ClearFullRow();// ClearFullRow();
-		yield return new WaitForSeconds(lockDelay);
-		isDropOver = true;
-		SpawnNewTetris();
-
+        field.ClearFullRow();
 	}
 
+	public void OnClearUp(int count){
+		AddScore(clearScores[count]);
+		SpawnNewTetris();
+	}
+
+	public void AddScore(int s){
+		score += s;
+		// ScoreChange(this,EventArgs.Empty);
+	}
 
 	public void SpawnNewTetris(){
-		Debug.Log("SpawnNewTetris");
-		// nextDroptime = 0;
-        currentShapeID = Random.Range(1, 7);
-
+		ds = DropStat.Spawning;
+        currentShapeID = UnityEngine.Random.Range(1, 7);
         SpawnTetris(currentShapeID);
+		ds = DropStat.Dropping;
 	}
 
 }

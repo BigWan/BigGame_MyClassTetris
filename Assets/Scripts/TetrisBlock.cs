@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class TetrisBlock : MonoBehaviour {
 
-    public Vector2Int pos;
+    private Vector2Int pos;
+    public Vector2Int Coord {
+        get {
+            return pos;
+        }
+        set{
+            pos = value;
+        }
+    }
 
-	//public bool isLock = false; // move or lock
     public Color color;
 
 	private void Update () {
@@ -19,12 +26,6 @@ public class TetrisBlock : MonoBehaviour {
     }
     public int Y {
         get { return (pos.y); }
-    }
-
-    public Vector2Int Coord {
-        get {
-            return new Vector2Int(X, Y);
-        }
     }
 
     public void DropDown() {
