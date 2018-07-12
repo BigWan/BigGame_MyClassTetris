@@ -35,7 +35,7 @@ public class TetrisManager : MonoBehaviour {
 	// 游戏设置
     public float   speed = 0.25f;      // 速度
 	public float  lockDelay = 0.5f;   // 下落延迟
-	public int[]  clearScores = new int[]{1,3,5,8};
+	public int[]  clearScores = new int[]{0,1,3,5,8};
 	// 资源引用
     public Transform blockContainer; // 方块父物体
     public TetrisBlock blockPrefab;  // 方块预制体
@@ -52,7 +52,7 @@ public class TetrisManager : MonoBehaviour {
 	private DropStat ds;
 	private bool GameOverStat = false;
 	// 游戏数据
-	private int score;
+	public int score;
 
 	// 事件,驱动数据改变的事件
 	public event EventHandler ScoreChange;   // 得分事件
@@ -276,7 +276,7 @@ public class TetrisManager : MonoBehaviour {
 
 	public void AddScore(int s){
 		score += s;
-		// ScoreChange(this,EventArgs.Empty);
+		ScoreChange(this,EventArgs.Empty);
 	}
 
 	public void SpawnNewTetris(){

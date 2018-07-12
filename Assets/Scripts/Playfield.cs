@@ -94,8 +94,8 @@ public class Playfield : MonoBehaviour {
                 }
             }
         }
-        ClearUp(rows.Length);
-        RefreshCells();
+        // ClearUp(rows.Length);
+        // RefreshCells();
         //Debug.Break();
     }
 
@@ -109,6 +109,7 @@ public class Playfield : MonoBehaviour {
             ClearRows(rows);
             DownOthers(rows);
         }
+        ClearUp(rows.Length);
     }
 
     /// <summary>
