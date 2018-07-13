@@ -13,13 +13,7 @@ using System;
 // 游戏流程,开始结束,摄像机等
 
 
-public enum  GameStat {
-	Ready,				// UI界面
-	Begin,				// 开始游戏
-    CutDown,			// 倒计时
-	Playing,			// 进行中
-	End					// 结束
-}
+
 
 public enum DropStat{
 	Spawning,
@@ -43,13 +37,13 @@ public class TetrisManager : MonoBehaviour {
     public Playfield field;          // 地图
 
 	// 私有全局变量
-	private GameStat stat;				// 游戏状态
+	// private GameStat stat;				// 游戏状态
     private float nextDroptime; 		// 下次降落时间
     private int currentShapeID = 0;		// 随机生成的块
 	private int nextShapeID = 0;		// 下一次的块ID，在UI框显示
     private TetrisBlock[] blocks;     	// 块的引用
 	private bool isDropOver = true;    	// 是否一次掉落完毕，可以继续生成下一个块
-	private DropStat ds;
+	private DropStat dropStat;
 	private bool GameOverStat = false;
 	// 游戏数据
 	public int score;
@@ -105,12 +99,12 @@ public class TetrisManager : MonoBehaviour {
 
 	// 初始化游戏
 	void InitGame(){
-		stat = GameStat.Ready;
+
 	}
 
 	// 生成方块
 	public void SpawnTetris(int index){
-		if(ds!=DropStat.Spawning) return;
+		if(dropStat!=DropStat.Spawning) return;
 		Vector2Int origin = field.SpwanOrigin;
 		int rnk = 4;					// TODO 支持其他类型的block
 		blocks = new TetrisBlock[rnk];
@@ -127,7 +121,7 @@ public class TetrisManager : MonoBehaviour {
 	/// 方块旋转,踢墙和踢地板
 	/// </summary>
 	public void Rotation () {
-		if(ds!=DropStat.Dropping) return;
+		if(dropStat!=DropStat.Dropping) return;
 		Vector2Int[] newpos = new Vector2Int[4];
 		// 计算原地旋转后的坐标
 		for (int i = 0; i < blocks.Length; i++) {
@@ -155,7 +149,7 @@ public class TetrisManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="dir">左右方向</param>
 	void Move(Vector2Int dir){
-		if(ds!= DropStat.Dropping) return;
+		if(dropStat!= DropStat.Dropping) return;
 		Vector2Int[] newpos = new Vector2Int[4];
 
 		for (int i = 0; i < blocks.Length; i++) {
@@ -175,7 +169,7 @@ public class TetrisManager : MonoBehaviour {
 	/// 正常下落功能
 	/// </summary>
     void DropDown() {
-		if (nextDroptime >= speed && ds == DropStat.Dropping){
+		if (nextDroptime >= speed && dropStat == DropStat.Dropping){
 			nextDroptime -= speed;
 			Vector2Int[] newpos = new Vector2Int[4];
 			// 能不能移
@@ -199,13 +193,13 @@ public class TetrisManager : MonoBehaviour {
 	/// 快速下落功能，快捷键向下箭头
 	/// </summary>
 	void QuickDropDown(){
-		if(ds != DropStat.Dropping) return;
+		if(dropStat != DropStat.Dropping) return;
 		int dis = ClacGhostDistance();
 		for (int i = 0; i < 4; i++) {
 			blocks[i].Coord = blocks[i].Coord + Vector2Int.down*dis;
 		}
 		pivot.localPosition = pivot.localPosition + Vector3.down*dis;
-		ds = DropStat.Delaying;
+		dropStat = DropStat.Delaying;
 		LockShape();
 	}
 
@@ -258,7 +252,7 @@ public class TetrisManager : MonoBehaviour {
 
 	// 停止
 	public void LockShape () {
-		ds = DropStat.Delaying;
+		dropStat = DropStat.Delaying;
 		nextDroptime = 0;
 		for (int i = 0; i < blocks.Length; i++) {
             blocks[i].transform.SetParent(blockContainer);
@@ -280,10 +274,10 @@ public class TetrisManager : MonoBehaviour {
 	}
 
 	public void SpawnNewTetris(){
-		ds = DropStat.Spawning;
+		dropStat = DropStat.Spawning;
         currentShapeID = UnityEngine.Random.Range(1, 7);
         SpawnTetris(currentShapeID);
-		ds = DropStat.Dropping;
+		dropStat = DropStat.Dropping;
 	}
 
 }

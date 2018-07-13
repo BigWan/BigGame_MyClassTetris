@@ -55,8 +55,8 @@
         ".vs/":true,
         ".vscode/":true,
         "Packages/":true,
-        "**/*.csproj":true,
-        "**/*.sln":true,
+        // "**/*.csproj":true,
+        // "**/*.sln":true,
 
     }
 }

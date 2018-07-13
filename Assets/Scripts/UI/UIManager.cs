@@ -3,30 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+// UI窗口管理器
 public class UIManager : MonoBehaviour {
 
-	public Transform MainUI;
-	public Transform ButtonPanel;
-	public Button StartButton;
-	public Button SettingButton;
+	// view
+	public MainUI mainUI;
+	public Transform tetrisUI;
 
-	public Text scoreText;
-	public TetrisManager manager;
-
-	private void Awake() {
-		Debug.Log("Awake");
-
-		manager.ScoreChange += OnScoreChange;
+	public void ShowMainUI(){
+		mainUI.Show();
+		tetrisUI.gameObject.SetActive(false);
 	}
 
-	void OnScoreChange(object sender,System.EventArgs e){
-		ShowScore();
+	public void ShowTetrisUI(){
+		mainUI.Hide();
+		tetrisUI.gameObject.SetActive(false);
 	}
-	void ShowScore(){
-		Debug.Log("Show Score");
-		scoreText.text = manager.score.ToString();
-	}
+
 
 
 }
