@@ -95,6 +95,7 @@ public class TetrisManager : MonoBehaviour {
 
 	private void Awake() {
 		field.ClearUp += OnClearUp;
+		SpawnNewTetris();
 	}
 
 	// 初始化游戏
