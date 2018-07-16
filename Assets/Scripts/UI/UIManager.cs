@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// UI管理器
-public  class UIWindowManager :MonoBehaviour {
+// UI管理器 单例
+public class UIManager :UnitySingleton<UIManager> {
 
-	public  Dictionary<string,BaseUIWindow> allPages;		// 所有注册的页面
-	public  List<BaseUIWindow> currentPageNodes;			// 当前的返回按钮逻辑
+	public Dictionary<string,PageBase> allPages;		// 所有注册的页面
+	public List<PageBase> currentPageNodes;			// 当前的返回按钮逻辑
 
 	// public Transform fixedRoot;
 	// public Transform normalRoot;
 	// public Transform pooupRoot;
+	void Awake(){
 
-	public  void PopNode(BaseUIWindow page){
+	}
+
+	public void PopNode(PageBase page){
 		if(currentPageNodes == null)
-			currentPageNodes = new List<BaseUIWindow>();
+			currentPageNodes = new List<PageBase>();
 		if(CheckIfNeedBack(page)==false){
 			return;
 		}
@@ -36,20 +39,19 @@ public  class UIWindowManager :MonoBehaviour {
 		HideOldNodes();
 	}
 
-	public  void HideOldNodes(){
+	public void HideOldNodes(){
 		int count  = currentPageNodes.Count;
 		if(count<1) return;
-		BaseUIWindow page = currentPageNodes[count-1];
+		PageBase page = currentPageNodes[count-1];
 		if(page.mode == UIMode.HideOther){
 			for (int i =  count-2; i>=0;i--) {
 				if(currentPageNodes[i].isActive())
 					currentPageNodes[i].Hide();
 			}
 		}
-
 	}
 
-	public  bool CheckIfNeedBack(BaseUIWindow page){
+	public  bool CheckIfNeedBack(PageBase page){
 		if(page.type == UIType.Fixed || page.type == UIType.Popup || page.type == UIType.None){
 			return false;
 		}else if(page.mode == UIMode.NoNeedBack || page.mode == UIMode.DoNothing){
@@ -59,7 +61,7 @@ public  class UIWindowManager :MonoBehaviour {
 		}
 	}
 
-	public void ShowPage(BaseUIWindow page){
+	public void ShowPage(PageBase page){
 		page.Show();
 	}
 

@@ -10,15 +10,16 @@ public enum UIType {
 	None
 }
 
-public enum UIMode{
+public enum UIMode {
 	DoNothing,
 	HideOther,
 	NeedBack,
 	NoNeedBack
 }
 
-public abstract class BaseUIWindow : MonoBehaviour {
+public abstract class PageBase : MonoBehaviour {
 
+	[Header("UI设置")]
 	public UIType type = UIType.Normal;
 	public UIMode mode = UIMode.DoNothing;
 
@@ -43,7 +44,7 @@ public abstract class BaseUIWindow : MonoBehaviour {
 		gameObject.SetActive(true);
 		Debug.Log(Name() + " Show");
 		Refresh();
-		UIWindowManager.PopNode(this);
+		UIManager.Instance.PopNode(this);
 	}
 
 	public virtual bool isActive(){

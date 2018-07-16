@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 游戏界面窗口
-public class TetrisUI : BaseUIWindow {
+public class TetrisPage : PageBase {
 
-	// 控件
+	// Ref
 	public Playfield playGround;
 
 	[Header("等级得分")]

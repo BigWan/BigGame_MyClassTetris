@@ -542,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4e1e80731f61874dbd96fcb766f0541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPageNodes: []
 --- !u!1 &320153960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,7 +1078,6 @@ MonoBehaviour:
   LogoPanel: {fileID: 0}
   ButtonsPanel: {fileID: 0}
   AnimPanel: {fileID: 0}
-  gameManager: {fileID: 1482621373}
   btnStart: {fileID: 1039838677}
   btnSetting: {fileID: 844064443}
 --- !u!1 &422303808
@@ -3275,8 +3275,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tetrisMgr: {fileID: 656619183}
   soundMgr: {fileID: 351534212}
-  mainPage: {fileID: 411418427}
-  tui: {fileID: 388796580}
 --- !u!4 &1482621374
 Transform:
   m_ObjectHideFlags: 0

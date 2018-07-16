@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 
 // 登陆界面窗口
-public class MainUI : BaseUIWindow {
+public class MainPage : PageBase {
 	[Header("Panle")]
 	public Transform LogoPanel;
 	public Transform ButtonsPanel;
 	public Transform AnimPanel;
 
-	[Header("GameObject")]
-	public GameManager gameManager;
+	// [Header("GameObject")]
+	// public GameManager gameManager;
 
 	[Header("Buttons")]
 	public Button btnStart;
@@ -22,8 +22,12 @@ public class MainUI : BaseUIWindow {
 	// 私有成员
 	public override void Initialize(){
 		base.Initialize();
-		btnStart.onClick.AddListener(OnbtnStart_Click);
-		btnSetting.onClick.AddListener(OnbtnSetting_Click);
+		btnStart.onClick.AddListener(
+			()=>{
+				GameManager.Instance.StartGame();
+			}
+		);
+		btnSetting.onClick.AddListener(()=>{});
 		isInit = true;
 	}
 
@@ -36,11 +40,6 @@ public class MainUI : BaseUIWindow {
 		base.Hide();
 	}
 
-	public void OnbtnStart_Click(){
-		gameManager.StartGame();
-	}
-	public void OnbtnSetting_Click(){
 
-	}
 
 }

@@ -9,22 +9,20 @@ public enum  GameStat {
 	End					// 结束
 }
 
-public class GameManager : MonoBehaviour {
+public class GameManager : UnitySingleton<GameManager> {
 
 	[Header("Manager")]
-	public UIWindowManager uiMgr;
 	public TetrisManager tetrisMgr;
 	public SoundManager soundMgr;
 
-
 	void Awake(){
 		Debug.Assert(tetrisMgr!=null && soundMgr!=null,"管理器空引用");
-		uiMgr.ShowPage();
+		// UIWindowManager.mgr.ShowPage();
 	}
 
 	public void StartGame(){
 		Debug.Log("开始游戏");
-		uiMgr.ShowPage();
+		// UIWindowManager.mgr.ShowPage();
 	}
 
 }
