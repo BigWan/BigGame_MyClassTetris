@@ -16,14 +16,15 @@ public class GameManager : MonoBehaviour {
 	public TetrisManager tetrisMgr;
 	public SoundManager soundMgr;
 
+
 	void Awake(){
-		Debug.Assert(uiMgr!=null && tetrisMgr!=null && soundMgr!=null,"管理器空引用");
-		uiMgr.ShowMainUI();
+		Debug.Assert(tetrisMgr!=null && soundMgr!=null,"管理器空引用");
+		uiMgr.ShowPage();
 	}
 
 	public void StartGame(){
 		Debug.Log("开始游戏");
-		uiMgr.ShowTetrisUI();
+		uiMgr.ShowPage();
 	}
 
 }

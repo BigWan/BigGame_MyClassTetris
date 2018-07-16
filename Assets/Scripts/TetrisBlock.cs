@@ -14,10 +14,12 @@ public class TetrisBlock : MonoBehaviour {
         }
     }
 
+    public Sprite[] colors;
     public Color color;
 
 	private void Update () {
 	    transform.localPosition = new Vector3 (pos.x, pos.y, 0);
+        transform.GetComponent<SpriteRenderer>().sprite = colors[3];
         // transform.GetComponent<MeshRenderer>().material.color = color;
 	}
 

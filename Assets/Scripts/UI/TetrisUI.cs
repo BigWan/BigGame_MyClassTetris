@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 游戏界面窗口
-public class TetrisUI : UIWindow {
+public class TetrisUI : BaseUIWindow {
 
 	// 控件
 	public Playfield playGround;
@@ -23,12 +23,13 @@ public class TetrisUI : UIWindow {
 	// 初始化
 	public override void Initialize(){}
 	// 激活
-	public override void Activate(){
-		base.Activate();
+	public override void Show(){
+		base.Show();
 	}
 	// 关闭
 	public override void Hide(){
 		base.Hide();
+		Debug.Log("哈哈");
 	}
 
 

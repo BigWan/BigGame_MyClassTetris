@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 设置窗口
-public class SettingUI : UIWindow {
+public class SettingUI : BaseUIWindow {
 
 	public Button btnClose; // 关闭按钮
 	public Slider sldSound; // 音量滑块
 
-	public override void Activate(){
+	public override void Show(){
 		btnClose.onClick.AddListener(OnbtnClose_Click);
 		sldSound.onValueChanged.AddListener(OnsldSound_Change);
 	}

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 // 登陆界面窗口
-public class MainUI : UIWindow {
+public class MainUI : BaseUIWindow {
 	[Header("Panle")]
 	public Transform LogoPanel;
 	public Transform ButtonsPanel;
@@ -27,9 +27,9 @@ public class MainUI : UIWindow {
 		isInit = true;
 	}
 
-	public override void Activate(){
+	public override void Show(){
 		if(!isInit) Initialize();
-		base.Activate();
+		base.Show();
 	}
 
 	public override void Hide(){

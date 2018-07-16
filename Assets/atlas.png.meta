@@ -2,14 +2,14 @@ fileFormatVersion: 2
 guid: 3d494536c3ea6044694556f561172145
 TextureImporter:
   fileIDToRecycleName:
-    21300000: color_purple
-    21300002: color_red
-    21300004: color_green
-    21300006: color_blue
-    21300008: color_orange
-    21300010: color_gray
-    21300012: color_brown
-    21300014: color_mix
+    21300000: block_purple
+    21300002: block_red
+    21300004: block_green
+    21300006: block_blue
+    21300008: block_orange
+    21300010: block_gray
+    21300012: block_brown
+    21300014: block_mix
     21300016: score
     21300018: num0
     21300020: num1
@@ -115,7 +115,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: color_purple
+      name: block_purple
       rect:
         serializedVersion: 2
         x: 24
@@ -135,7 +135,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_red
+      name: block_red
       rect:
         serializedVersion: 2
         x: 16
@@ -155,7 +155,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_green
+      name: block_green
       rect:
         serializedVersion: 2
         x: 8
@@ -175,7 +175,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_blue
+      name: block_blue
       rect:
         serializedVersion: 2
         x: 0
@@ -195,7 +195,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_orange
+      name: block_orange
       rect:
         serializedVersion: 2
         x: 16
@@ -215,7 +215,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_gray
+      name: block_gray
       rect:
         serializedVersion: 2
         x: 24
@@ -235,7 +235,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_brown
+      name: block_brown
       rect:
         serializedVersion: 2
         x: 8
@@ -255,7 +255,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: color_mix
+      name: block_mix
       rect:
         serializedVersion: 2
         x: 0
@@ -543,7 +543,7 @@ TextureImporter:
         width: 2
         height: 2
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
