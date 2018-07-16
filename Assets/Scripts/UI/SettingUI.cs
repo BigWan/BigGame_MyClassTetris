@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingUI : MonoBehaviour {
+// 设置窗口
+public class SettingUI : UIWindow {
 
 	public Button btnClose; // 关闭按钮
 	public Slider sldSound; // 音量滑块
 
-	// public AudioSource audio;
-	void Awake(){
+	public override void Activate(){
 		btnClose.onClick.AddListener(OnbtnClose_Click);
 		sldSound.onValueChanged.AddListener(OnsldSound_Change);
 	}
 
+	public override void Initialize(){
+
+	}
+
+	public override void Hide(){
+		base.Hide();
+
+	}
+
 	void OnbtnClose_Click(){
-		btnClose.onClick.RemoveAllListeners();
-		sldSound.onValueChanged.RemoveAllListeners();
+		// btnClose.onClick.RemoveAllListeners();
+		// sldSound.onValueChanged.RemoveAllListeners();
 		this.gameObject.SetActive(false);
 	}
 

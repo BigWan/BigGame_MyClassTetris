@@ -5,24 +5,27 @@ using UnityEngine;
 
 public enum  GameStat {
 	Ready,				// UI界面
-	Begin,				// 开始游戏
-    CutDown,			// 倒计时
 	Playing,			// 进行中
 	End					// 结束
 }
 
 public class GameManager : MonoBehaviour {
-	public UIManager uiManager;
-	public TetrisManager tetrisManager;
-	private GameStat gs;
+
+	[Header("Manager")]
+	public UIWindowManager uiMgr;
+	public TetrisManager tetrisMgr;
+	public SoundManager soundMgr;
 
 	void Awake(){
-		uiManager.ShowMainUI();
-		gs = GameStat.Ready;
+		Debug.Assert(uiMgr!=null && tetrisMgr!=null && soundMgr!=null,"管理器空引用");
+		uiMgr.ShowMainUI();
 	}
+
 	public void StartGame(){
-		Debug.Log("开始游戏拉祜");
+		Debug.Log("开始游戏");
+		uiMgr.ShowTetrisUI();
 	}
+
 }
 
 

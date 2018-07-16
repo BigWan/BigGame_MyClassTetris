@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 // 登陆界面窗口
-public class MainUI : MonoBehaviour {
+public class MainUI : UIWindow {
 	[Header("Panle")]
 	public Transform LogoPanel;
 	public Transform ButtonsPanel;
@@ -18,21 +18,26 @@ public class MainUI : MonoBehaviour {
 	public Button btnStart;
 	public Button btnSetting;
 
-	public void Show(){
-		Debug.Log("显示主界面");
-		this.gameObject.SetActive(true);
+	private bool isInit;
+	// 私有成员
+	public override void Initialize(){
+		base.Initialize();
 		btnStart.onClick.AddListener(OnbtnStart_Click);
 		btnSetting.onClick.AddListener(OnbtnSetting_Click);
+		isInit = true;
 	}
 
-	public void Hide(){
-		this.gameObject.SetActive(false);
-		btnStart.onClick.RemoveListener(OnbtnStart_Click);
+	public override void Activate(){
+		if(!isInit) Initialize();
+		base.Activate();
+	}
+
+	public override void Hide(){
+		base.Hide();
 	}
 
 	public void OnbtnStart_Click(){
 		gameManager.StartGame();
-		this.Hide();
 	}
 	public void OnbtnSetting_Click(){
 
