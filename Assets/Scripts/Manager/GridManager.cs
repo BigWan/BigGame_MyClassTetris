@@ -55,7 +55,7 @@ public class GridManager : UnitySingleton<GridManager> {
         cell.name = x.ToString() + '_' +  y.ToString();
         cell.SetParent(go.transform);
         cell.localPosition = new Vector3(x, y, 0);
-        cell.hideFlags = HideFlags.HideAndDontSave;
+        // cell.hideFlags = Hide;
     }
 
 }
