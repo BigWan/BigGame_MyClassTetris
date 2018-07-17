@@ -6,9 +6,6 @@ using UnityEngine.UI;
 // 游戏界面窗口
 public class TetrisPage : PageBase {
 
-	// Ref
-	public Playfield playGround;
-
 	[Header("等级得分")]
 	public Text score;
 	public Text level;
@@ -22,6 +19,21 @@ public class TetrisPage : PageBase {
 
     public void Awake() {
         TetrisManager.Instance.ScoreChange += OnScoreChange;
+		btn_up.onClick.AddListener(()=>{
+			TetrisManager.Instance.Rotation();
+		});
+
+		btn_down.onClick.AddListener(()=>{
+			TetrisManager.Instance.QuickDropDown();
+		});
+
+		btn_left.onClick.AddListener(()=>{
+			TetrisManager.Instance.Move(Vector2Int.left);
+		});
+
+		btn_right.onClick.AddListener(()=>{
+			TetrisManager.Instance.Move(Vector2Int.right);
+		});
     }
 
     void OnScoreChange(object o,System.EventArgs e) {

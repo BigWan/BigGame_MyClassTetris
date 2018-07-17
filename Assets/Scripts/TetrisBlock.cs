@@ -19,8 +19,6 @@ public class TetrisBlock : MonoBehaviour {
 
 	private void Update () {
 	    transform.localPosition = new Vector3 (pos.x, pos.y, 0);
-        transform.GetComponent<SpriteRenderer>().sprite = colors[3];
-        // transform.GetComponent<MeshRenderer>().material.color = color;
 	}
 
     public int X {
