@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour {
+public class SoundManager : UnitySingleton<SoundManager> {
 
-	private AudioSource player;
+	private AudioSource audioPlayer;
 
 	public AudioClip bgm;
 
@@ -14,13 +14,14 @@ public class SoundManager : MonoBehaviour {
 	public AudioClip gameover;
 
 	void Awake(){
-		player = GetComponent<AudioSource>() as AudioSource;
+        audioPlayer = GetComponent<AudioSource>() as AudioSource;
 	}
 
 
-	void OnSpeedUp(){
 
-	}
 
+    public void SetVolumn(float v) {
+        audioPlayer.volume = Mathf.Clamp01(v);
+    }
 
 }

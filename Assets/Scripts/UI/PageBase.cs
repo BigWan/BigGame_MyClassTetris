@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+#region page define
 public enum UIType {
 	Normal,
 	Fixed,
@@ -16,39 +16,31 @@ public enum UIMode {
 	NeedBack,
 	NoNeedBack
 }
-
-public abstract class PageBase : MonoBehaviour {
+#endregion
+public abstract class PageBase : UnitySingleton<PageBase> {
 
 	[Header("UI设置")]
 	public UIType type = UIType.Normal;
 	public UIMode mode = UIMode.DoNothing;
-
+	public bool FullScreen = false;
 
 	public object data;
 
-	// private UIWindowManager ui_mgr;
-	private bool isAwake = false;
+	//private bool isAwake = false;
 	// 初始化
 	// 添加事件监听
-
 	void Awake(){
-		Initialize();
-	}
-	public virtual void Initialize(){
-		isAwake = true;
-		Debug.Log(Name() + " Initialize");
-	}
+        //isAwake = true;
+        Debug.Log(Name() + " Initialize");
+    }
+
 	// 激活
 	public virtual void Show(){
-		if(!isAwake) Initialize();
+		//if(!isAwake) Initialize();
 		gameObject.SetActive(true);
 		Debug.Log(Name() + " Show");
 		Refresh();
 		UIManager.Instance.PopNode(this);
-	}
-
-	public virtual bool isActive(){
-		return gameObject!=null&&gameObject.activeSelf;
 	}
 
 	// 关闭
@@ -65,4 +57,14 @@ public abstract class PageBase : MonoBehaviour {
 		return gameObject.name ;
 	}
 
+
+    [ContextMenu("命名GameObject")]
+    void RenameObject() {
+        gameObject.name = this.GetType().ToString();
+    }
+
+
+    private void Reset() {
+        RenameObject();
+    }
 }

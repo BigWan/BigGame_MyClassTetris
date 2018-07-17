@@ -18,27 +18,39 @@ public class MainPage : PageBase {
 	public Button btnStart;
 	public Button btnSetting;
 
-	private bool isInit;
-	// 私有成员
-	public override void Initialize(){
-		base.Initialize();
-		btnStart.onClick.AddListener(
-			()=>{
-				GameManager.Instance.StartGame();
-			}
-		);
-		btnSetting.onClick.AddListener(()=>{});
-		isInit = true;
-	}
+	//private bool isInit;
+    // 私有成员
+    public void Awake() {
+        btnStart.onClick.AddListener(
+            () => {
+                GameManager.Instance.StartGame();
+            }
+        );
+        btnSetting.onClick.AddListener(() => {
+            UIManager.Instance.ShowPage("SettingPage");
+        });
+    }
+ //   public override void Initialize(){
+	//	base.Initialize();
+	//	isInit = true;
+	//	btnStart.onClick.AddListener(
+	//		()=>{
+ //               Debug.Log("这都是啥啊");
+	//			//GameManager.Instance.StartGame();
+	//		}
+	//	);
+	//	btnSetting.onClick.AddListener(()=>{});
 
-	public override void Show(){
-		if(!isInit) Initialize();
-		base.Show();
-	}
+	//}
 
-	public override void Hide(){
-		base.Hide();
-	}
+	//public override void Show(){
+	//	base.Show();
+	//}
+
+	//public override void Hide(){
+	//	base.Hide();
+
+	//}
 
 
 

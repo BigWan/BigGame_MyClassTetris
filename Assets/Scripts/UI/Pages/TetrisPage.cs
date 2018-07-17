@@ -20,17 +20,12 @@ public class TetrisPage : PageBase {
 	public Button btn_left;
 	public Button btn_right;
 
-	// 初始化
-	public override void Initialize(){}
-	// 激活
-	public override void Show(){
-		base.Show();
-	}
-	// 关闭
-	public override void Hide(){
-		base.Hide();
-		Debug.Log("哈哈");
-	}
+    public void Awake() {
+        TetrisManager.Instance.ScoreChange += OnScoreChange;
+    }
 
+    void OnScoreChange(object o,System.EventArgs e) {
+        score.text = (o as TetrisManager).score.ToString();
+    }
 
 }

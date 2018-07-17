@@ -12,7 +12,7 @@ using System;
 // 用池来管理Block的生成和摧毁
 // 游戏流程,开始结束,摄像机等
 
-
+public delegate void ScoreChangeHandler(int score);
 
 
 public enum DropStat{
@@ -24,7 +24,7 @@ public enum DropStat{
 /// <summary>
 /// 方块管理器,负责方块旋转,下落,消行等
 /// </summary>
-public class TetrisManager : MonoBehaviour {
+public class TetrisManager : UnitySingleton<TetrisManager> {
 
 	// 游戏设置
     public float   speed = 0.25f;      // 速度
@@ -45,6 +45,8 @@ public class TetrisManager : MonoBehaviour {
 	private bool isDropOver = true;    	// 是否一次掉落完毕，可以继续生成下一个块
 	private DropStat dropStat;
 	private bool GameOverStat = false;
+
+    private bool GameStart = false;
 	// 游戏数据
 	public int score;
 
@@ -95,13 +97,12 @@ public class TetrisManager : MonoBehaviour {
 
 	private void Awake() {
 		field.ClearUp += OnClearUp;
-		SpawnNewTetris();
 	}
 
-	// 初始化游戏
-	void InitGame(){
-
-	}
+	// 开始游戏
+	public void StartGame(){
+        SpawnNewTetris();
+    }
 
 	// 生成方块
 	public void SpawnTetris(int index){
@@ -224,7 +225,7 @@ public class TetrisManager : MonoBehaviour {
 
 	// 游戏开始
 	private void Start() {
-		SpawnNewTetris();
+
 	}
 
 	void Update () {
@@ -270,9 +271,11 @@ public class TetrisManager : MonoBehaviour {
 	}
 
 	public void AddScore(int s){
+
 		score += s;
-		ScoreChange(this,EventArgs.Empty);
-	}
+        Debug.Log(score);
+        ScoreChange(this,EventArgs.Empty);
+    }
 
 	public void SpawnNewTetris(){
 		dropStat = DropStat.Spawning;

@@ -21,7 +21,7 @@ public class Playfield : MonoBehaviour {
     // 动态引用
     public List<TetrisBlock> LockedBlocks;
     public Vector2Int SpwanOrigin;    // 生成的方块的原点
-    private Transform[,] grids;
+    //private Transform[,] grids;
 
     // 棋盘数据
     public int[,] cells;
@@ -34,10 +34,11 @@ public class Playfield : MonoBehaviour {
     }
 
     private void Awake() {
+        Debug.Log("Field Awake");
         LockedBlocks = new List<TetrisBlock>();
         cells = new int[column, maxRow];
-        grids = new Transform[column, maxRow];
-        RenderGrid();
+        //grids = new Transform[column, maxRow];
+        //RenderGrid();
         CalcOrigin();
     }
 
