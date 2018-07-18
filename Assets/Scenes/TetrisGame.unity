@@ -752,7 +752,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &367961326
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1505,7 +1505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &574750231
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1853,13 +1853,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb71540769bd33048a04262091bb03b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.4
   lockDelay: 5
   clearScores: 0000000001000000030000000500000008000000
   blockContainer: {fileID: 771004999}
-  blockPrefab: {fileID: 114141817516679230, guid: 3ee76916d7d8ba342b8649415df40e12,
-    type: 2}
-  pivot: {fileID: 539471258}
   LockedBlocks: []
   currentShapeID: 0
   nextShapeID: 0
@@ -1872,6 +1868,12 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 1, a: 1}
   - {r: 0.43385336, g: 0.15477037, b: 0.8867924, a: 1}
   - {r: 0.5, g: 0, b: 0.5, a: 1}
+  blockPrefab: {fileID: 114141817516679230, guid: 3ee76916d7d8ba342b8649415df40e12,
+    type: 2}
+  dropStat: 0
+  pivot: {fileID: 539471258}
+  speed: 0.4
+  nextDroptime: 0
 --- !u!4 &656619184
 Transform:
   m_ObjectHideFlags: 0
@@ -2288,7 +2290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &923968731
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3825,7 +3827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1824131093
 RectTransform:
   m_ObjectHideFlags: 0
